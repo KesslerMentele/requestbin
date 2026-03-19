@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import './index.css';
 import App from './App.tsx';
 import { BinServiceContext } from './contexts/binServiceContext.ts';
-// import binService from './services/binService.ts';
+// import binService from './services/pgService.ts';
 import binServiceLocal from './services/binServiceLocal.ts';
 
 
