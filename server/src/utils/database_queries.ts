@@ -55,18 +55,15 @@ export const postgresGetAllBins = async () => {
 
 const postgresGetSingleBin = async (binName: string) => {
     const binResult = await postgresPool.query(
-        `SELECT id FROM bins where name = $1`, [binName]
+      `SELECT id FROM bins where name = $1`, [binName]
     )
     return binResult.rows[0]
 }
 
 export const postgresGetAllRequests = async (binName: string) => {
-    const result = await postgresPool.query(`select requests.id, bin.name as bin_name, 
-        requests.mongodb_id, requests.time_stamp, requests.http_method
-        FROM "requests" 
-        JOIN bins bin on requests.bin_id = bin.id
-        WHERE bin.name = $1`,
-        [binName]
+    const result = await postgresPool.query(`select requests.id, bin.name as bin_name,
+       requests.mongodb_id, requests.time_stamp, requests.http_method FROM "requests" 
+           JOIN bins bin on requests.bin_id = bin.id WHERE bin.name = $1`, [binName]
     );
     return result.rows;
 }
@@ -77,8 +74,8 @@ export const postgresCreateBin = async (binName: string) => {
         throw new Error(`Bin ${binName} already exists`)
     }
     const result = await postgresPool.query(
-        `INSERT INTO bins (name) VALUES ($1)
-        RETURNING name`, [binName]
+      `INSERT INTO bins (name) VALUES ($1)
+          RETURNING name`, [binName]
     );
     return result.rows[0]
 }
@@ -89,20 +86,16 @@ export const postgresDeleteBin = async (binName: string) => {
         throw new Error(`Bin ${binName} does not exist`)
     }
     const result = await postgresPool.query(
-        `DELETE FROM bins WHERE name = $1`, [binName]
+      `DELETE FROM bins WHERE name = $1`, [binName]
     );
     return result.rows[0]
 }
 
 export const postgresDeleteRequest = async (id: number, binName: string): Promise<string> => {
     const result = await postgresPool.query(
-        `DELETE FROM requests
-         USING bins
-         WHERE requests.id = $1 
-           AND requests.bin_id = bins.id 
-           AND bins.name = $2
-         RETURNING requests.mongodb_id`,
-        [id, binName]
+      `DELETE FROM requests
+          USING bins WHERE requests.id = $1 AND requests.bin_id = bins.id AND bins.name = $2 RETURNING requests.mongodb_id`,
+      [id, binName]
     );
 
     if (!result.rows[0] || result.rowCount === 0) {
@@ -113,9 +106,9 @@ export const postgresDeleteRequest = async (id: number, binName: string): Promis
 
 export const postgresDeleteAllRequestsFromBin = async (binName: string) => {
     const result = await postgresPool.query(`
-        DELETE FROM requests
-        WHERE bin_id = (SELECT id FROM bins WHERE name = $1)`,
-        [binName]
+          DELETE FROM requests
+          WHERE bin_id = (SELECT id FROM bins WHERE name = $1)`,
+      [binName]
     );
     return result.rows;
 }
@@ -127,10 +120,10 @@ export const postgresInsertRequest = async (binName: string, mongodbID: string, 
         throw new Error(`Bin ${binName} does not exist`)
     }
     const result = await postgresPool.query(
-        `INSERT INTO requests (bin_id, mongodb_id, http_method)
-        VALUES ((SELECT id from bins where name = $1), $2, $3)
-        RETURNING *`,
-        [binName, mongodbID, httpMethod]
+      `INSERT INTO requests (bin_id, mongodb_id, http_method)
+       VALUES ((SELECT id from bins where name = $1), $2, $3)
+           RETURNING *`,
+      [binName, mongodbID, httpMethod]
     );
     return result.rows[0];
 }

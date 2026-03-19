@@ -21,15 +21,12 @@ const app = express();
 
 // app.use(cors({
 //     origin: (origin, callback) => {
-//         const allowed = !origin || ['http://localhost:3000', 'https://forkless-tamesha-unphlegmatically.ngrok-free.dev/', 'http://localhost:5174'].includes(origin);
+//         const allowed = !origin || ['http://localhost:3000', 'https://forkless-tamesha-unphlegmatically.ngrok-free.dev/', 'http://localh>
 //         callback(null, allowed ? origin : false);
 //     } }));
 
 app.use(cors({ origin: true }));
-
-// app.use(cors({ origin: 'https://forkless-tamesha-unphlegmatically.ngrok-free.dev/' }));
 app.use(express.json());
-app.use(express.static('dist'));
 const server = createServer(app);
 const wss = new WebSocketServer({ server, path: '/ws' })
 
@@ -37,9 +34,9 @@ const binSubscribers = new Map<string, Set<WebSocket>>();
 
 wss.on('connection', (ws) => {
     let subscribedBin: string | null = null;
-
+    console.log("websocket connection")
     ws.on('message', (message) => {
-
+        console.log("websocket message");
         try {
             const { binName } = JSON.parse(message.toString());
 
@@ -49,6 +46,7 @@ wss.on('connection', (ws) => {
             }
             //ensures add is not null or undefined with !
             binSubscribers.get(binName)!.add(ws);
+            console.log("websocket");
             ws.send(JSON.stringify({ event: 'subscribed', binName }))
         } catch (error) {
             console.error('WebSocket message error:', error);
@@ -56,7 +54,6 @@ wss.on('connection', (ws) => {
         }
 
     });
-
     ws.on('close', () => {
         if (subscribedBin) {
             binSubscribers.get(subscribedBin)?.delete(ws);
@@ -165,7 +162,7 @@ app.get('/api/bins/:binName/requests', async (req: Request, res: Response) => {
 
         // what is the shape of the json
         const mongoMap = new Map(
-            mongoRequests.map((doc: any) => [doc._id.toString(), doc])
+          mongoRequests.map((doc: any) => [doc._id.toString(), doc])
         );
 
 
@@ -213,7 +210,7 @@ app.delete('/api/bins/:binName/requests/:requestId', async (req: Request, res: R
     }
 })
 
-// webhook endpoint
+/// webhook endpoint
 app.use('/bins/:binName', async (req: Request, res: Response) => {
     try {
         const mongoData = {
@@ -273,4 +270,4 @@ const startServer = async () => {
 
 }
 
-startServer();
+void startServer();
