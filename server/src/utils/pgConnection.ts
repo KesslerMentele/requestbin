@@ -20,7 +20,6 @@ export async function initPostgres(): Promise<void> {
     password: config.password,
     ssl: { rejectUnauthorized: false, ca: require('fs').readFileSync('./global-bundle.pem').toString() }
   });
-  console.log("Postgres pool initialized: ", postgresPool);
 }
 
 export function getPostgresPool(): pg.Pool {
