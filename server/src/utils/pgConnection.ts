@@ -15,7 +15,6 @@ export async function initPostgres(): Promise<void> {
   postgresPool = new pg.Pool({
     host: config.host,
     port: config.port,
-    database: config.dbInstanceIdentifier,
     user: config.username,
     password: config.password,
     ssl: { rejectUnauthorized: false, ca: require('fs').readFileSync('./global-bundle.pem').toString() }
