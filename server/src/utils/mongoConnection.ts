@@ -15,7 +15,7 @@ export async function initMongo(): Promise<void> {
   const config = await loadMongoConfig();
 
   const uri = `mongodb://${config.username}:${config.password}` +
-    `@${config.host}:${config.port}/?ssl=${config.ssl}` +
+    `@${config.host}:${config.port}/?ssl=${config.ssl ? "true" : "false"}` +
     `requestsdb?tls=true&tlsCAFile=global-bundle.pem&replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false`;
 
   await mongoose.connect(uri);
