@@ -1,6 +1,7 @@
-import {postgresPool} from "../utils/database_connections";
 import {BinRow, PostgresService, RequestRow} from "../types";
+import {getPostgresPool } from "../utils/pgConnection";
 
+const postgresPool = getPostgresPool();
 
 const getAllBins = async (): Promise<string[]> => {
     const result = await postgresPool.query<BinRow>('SELECT name FROM bins');

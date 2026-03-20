@@ -56,3 +56,22 @@ export interface PostgresService {
     httpMethod: string
   ): Promise<RequestRow>;
 }
+
+export type PGSecret = {
+  username: string;
+  password: string;
+  engine: string;
+  host: string;
+  port: number;
+  dbInstanceIdentifier: string;
+};
+
+export type DocDBSecret = {
+  username: string;
+  password: string;
+  engine: string;
+  host: string;
+  port: string;
+  ssl: boolean;
+  dbClusterIdentifier: string;
+};

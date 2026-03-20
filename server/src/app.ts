@@ -1,10 +1,11 @@
 import express, { Request, Response } from 'express';
-import { mongoDBConnect } from "./utils/database_connections"
+import { initPostgres } from "./utils/pgConnection"
 import { createServer } from 'http';
 import cors from 'cors';
 import binRouter from "./routes/binRoutes";
 import {webhookHandler} from "./handlers/webhookHandler";
 import {createWebSocketServer} from "./handlers/websocketHandler";
+import {initMongo} from "./utils/mongoConnection";
 
 const app = express();
 
@@ -30,7 +31,10 @@ app.use('/bins/:binName', webhookHandler);
 
 const startServer = async () => {
     const PORT = 3000;
-    await mongoDBConnect();
+    await Promise.all([
+        initMongo(),
+        initPostgres()
+    ]);
     server.listen(PORT, () => {
         console.log(`Server is running on port ${PORT}`);
     })
