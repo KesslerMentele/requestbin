@@ -24,6 +24,7 @@ export async function initMongo(): Promise<void> {
   await mongoose.connect(uri, {
     tls: config.ssl,
     tlsCAFile: path.resolve(__dirname, "../../global-bundle.pem"),
+    authMechanism: "SCRAM-SHA-1",
   });
 
   initialized = true;
