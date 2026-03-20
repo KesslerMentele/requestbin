@@ -1,4 +1,5 @@
 import {InsertOneResult, DeleteResult, WithId, ObjectId} from "mongodb";
+import { RequestHandler } from 'express';
 
 export type FormattedRequest = {
   id: any,
@@ -16,9 +17,9 @@ export type MongoRequestDocument = {
   request: unknown;
 };
 
-export type RequestPayload = {
-  [key: string]: unknown;
-};
+// export type RequestPayload = {
+//   [key: string]: unknown;
+// };
 
 export type ValidMongoId = string | ObjectId | Uint8Array;
 
@@ -75,3 +76,13 @@ export type DocDBSecret = {
   ssl: boolean;
   dbClusterIdentifier: string;
 };
+
+
+export interface BinHandler {
+  createBin:RequestHandler;
+  deleteAllRequestsFromBin:RequestHandler;
+  deleteBin:RequestHandler;
+  deleteRequest:RequestHandler;
+  getAllBins:RequestHandler;
+  getAllRequestsForBin:RequestHandler
+}

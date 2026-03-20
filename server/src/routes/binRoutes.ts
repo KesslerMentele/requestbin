@@ -1,31 +1,30 @@
 import {Router} from "express";
-import {
-  createBin,
-  deleteAllRequestsFromBin,
-  deleteBin,
-  deleteRequest,
-  getAllBins,
-  getAllRequestsForBin
-} from "../handlers/binHandler";
-
-const binRouter = Router();
+import {PostgresService} from "../types";
+import createBinHandler from "../handlers/binHandler";
 
 
-// creates a new bin with the name: 201, 400 if a bad name, 409 if name conflict
-binRouter.post('/', createBin)
+const createBinRouter = (pgService:PostgresService): Router => {
 
-// get all bins     returns [{ id: string }]
-binRouter.get('/', getAllBins)
+  const binRouter = Router();
+  const binHandler = createBinHandler(pgService);
 
-// deletes a bin
-binRouter.delete('/:binName',  deleteBin)
+  // creates a new bin with the name: 201, 400 if a bad name, 409 if name conflict
+  binRouter.post('/', binHandler.createBin)
 
-//delete requests in a bin
-binRouter.delete('/:binName/requests', deleteAllRequestsFromBin);
+  // get all bins     returns [{ id: string }]
+  binRouter.get('/', binHandler.getAllBins)
 
-// get all requests for a given bin
-binRouter.get('/:binName/requests', getAllRequestsForBin)
+  // deletes a bin
+  binRouter.delete('/:binName',  binHandler.deleteBin)
 
-binRouter.delete('/:binName/requests/:requestId', deleteRequest)
+  //delete requests in a bin
+  binRouter.delete('/:binName/requests', binHandler.deleteAllRequestsFromBin);
 
-export default binRouter;
+  // get all requests for a given bin
+  binRouter.get('/:binName/requests', binHandler.getAllRequestsForBin)
+
+  binRouter.delete('/:binName/requests/:requestId', binHandler.deleteRequest)
+
+  return binRouter;
+}
+export default createBinRouter;
