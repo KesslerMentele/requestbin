@@ -6,7 +6,7 @@ import {getSecret} from "../services/secretService";
 let postgresPool: pg.Pool | null = null;
 
 async function loadPGConfig(): Promise<PGSecret> {
-  return await getSecret<PGSecret>("CAPSTONE/PG_RDS/PG_CREDENTIALS")
+  return await getSecret<PGSecret>("/CAPSTONE/PG_RDS/PG_CREDENTIALS")
 }
 
 export async function initPostgres(): Promise<void> {
